@@ -1,0 +1,164 @@
+{
+  "info": {
+    "name": "PS #19 Crop Stress & Irrigation FastAPI Checkpoints",
+    "_postman_id": "c19b0123-5f8a-4c21-9988-ps19cropstress",
+    "description": "Comprehensive Postman test collection for PS #19: Crop Stress and Irrigation Priority Decision Support using FAO WaPOR and ML models.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Checkpoint 1 - Health Check & System Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": [""]
+        },
+        "description": "Verifies that the FastAPI server is running, the Decision Tree model (.pkl) is loaded, and returns API route registry."
+      },
+      "response": []
+    },
+    {
+      "name": "Checkpoint 2 - ML Model Benchmarks & SHAP Scores",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/model-info",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "model-info"]
+        },
+        "description": "Returns model comparison metrics (Decision Tree 0.9495 R2 vs Random Forest 0.9028 vs KNN 0.9231) and SHAP feature importance."
+      },
+      "response": []
+    },
+    {
+      "name": "Checkpoint 3 - Predict Crop Stress & Irrigation Priority (.pkl)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"field_id\": \"FIELD_0042\",\n  \"crop_type\": \"Cotton\",\n  \"soil_moisture_pct\": 18.5,\n  \"temperature_c\": 34.2,\n  \"humidity_pct\": 55.0,\n  \"rainfall_mm\": 0.5,\n  \"wapor_pcp_mm_day\": 0.05,\n  \"wapor_aeti_mm_day\": 0.45,\n  \"wapor_npp_gc_m2_day\": 2.10,\n  \"crop_critical_sm\": 40.0\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/predict",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "predict"]
+        },
+        "description": "Sends agricultural telemetry to the FastAPI backend, executes inference with crop_stress_model.pkl, logs to database, and returns stress score + action."
+      },
+      "response": []
+    },
+    {
+      "name": "Checkpoint 4 - Get Monitored Farm Parcels",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/fields?limit=10&crop=Cotton",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "fields"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "crop",
+              "value": "Cotton"
+            }
+          ]
+        },
+        "description": "Retrieves monitored agricultural parcels with remote sensing telemetry, supporting filtering and pagination."
+      },
+      "response": []
+    },
+    {
+      "name": "Checkpoint 5 - Save New Farm Parcel to Database",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"field_id\": \"FIELD_5001\",\n  \"region\": \"Punjab Basin\",\n  \"dekad\": \"2025-01-D1\",\n  \"latitude\": 31.8099,\n  \"longitude\": 74.9014,\n  \"crop_type\": \"Cotton\",\n  \"soil_type\": \"Sandy Soil\",\n  \"growth_stage\": \"Seedling / Initial\",\n  \"soil_moisture_pct\": 21.1,\n  \"temperature_c\": 29.0,\n  \"humidity_pct\": 59.3,\n  \"rainfall_mm\": 0.4,\n  \"wapor_pcp_mm_day\": 0.04,\n  \"wapor_aeti_mm_day\": 0.73,\n  \"wapor_npp_gc_m2_day\": 3.37,\n  \"crop_critical_sm\": 32.0\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/save-field",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "save-field"]
+        },
+        "description": "Inserts or updates a field record in the persistent database (SQLite / MongoDB / MySQL)."
+      },
+      "response": []
+    },
+    {
+      "name": "Checkpoint 6 - Retrieve Prediction Audit History",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/history?limit=15",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "history"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "15"
+            }
+          ]
+        },
+        "description": "Queries the database for historical inference audit records stored during POST /api/predict calls."
+      },
+      "response": []
+    }
+  ]
+}
