@@ -30,7 +30,7 @@ import numpy as np
 try:
     from fastapi import FastAPI, HTTPException, Query, status, Request
     from fastapi.middleware.cors import CORSMiddleware
-    from fastapi.responses import JSONResponse, HTMLResponse
+    from fastapi.responses import JSONResponse, HTMLResponse, FileResponse, RedirectResponse
     from fastapi.staticfiles import StaticFiles
     from pydantic import BaseModel, Field
     FASTAPI_AVAILABLE = True
@@ -305,12 +305,32 @@ if FASTAPI_AVAILABLE:
     if static_dir.exists():
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+    @app.get("/style.css", include_in_schema=False)
+    def get_root_css():
+        css_file = static_dir / "style.css"
+        if css_file.exists():
+            return FileResponse(css_file, media_type="text/css")
+        raise HTTPException(status_code=404)
+
+    @app.get("/app.js", include_in_schema=False)
+    def get_root_js():
+        js_file = static_dir / "app.js"
+        if js_file.exists():
+            return FileResponse(js_file, media_type="application/javascript")
+        raise HTTPException(status_code=404)
+
+    @app.get("/standalone_data.js", include_in_schema=False)
+    def get_root_data():
+        data_file = static_dir / "standalone_data.js"
+        if data_file.exists():
+            return FileResponse(data_file, media_type="application/javascript")
+        raise HTTPException(status_code=404)
+
     @app.get("/dashboard", response_class=HTMLResponse, summary="Web Dashboard UI")
     def serve_dashboard():
         index_file = static_dir / "index.html"
         if index_file.exists():
-            with open(index_file, "r", encoding="utf-8") as f:
-                return HTMLResponse(content=f.read())
+            return RedirectResponse(url="/static/index.html")
         raise HTTPException(status_code=404, detail="Dashboard not found")
 
     # --------------------------------------------------------------------------
@@ -320,12 +340,9 @@ if FASTAPI_AVAILABLE:
     @app.get("/", summary="Checkpoint 1: Health Check & Web Dashboard")
     def root_health_check(request: Request):
         accept = request.headers.get("accept", "")
-        # If accessed from a web browser, serve the visual dashboard
+        # If accessed from a web browser, redirect to the styled static dashboard
         if "text/html" in accept and "application/json" not in accept:
-            index_file = static_dir / "index.html"
-            if index_file.exists():
-                with open(index_file, "r", encoding="utf-8") as f:
-                    return HTMLResponse(content=f.read())
+            return RedirectResponse(url="/static/index.html")
         return {
             "status": "healthy",
             "service": "Crop Stress & Irrigation Priority API (PS #19)",
