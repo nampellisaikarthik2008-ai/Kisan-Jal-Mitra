@@ -118,6 +118,33 @@ def save_prediction_to_db(record: dict):
             return True
         except Exception as err:
             print(f"[DB Warning] MongoDB failed ({err}), falling back to SQLite.")
+
+    elif DB_BACKEND == "mysql":
+        try:
+            import pymysql
+            conn = pymysql.connect(
+                host=MYSQL_HOST, user=MYSQL_USER, password=MYSQL_PASSWORD,
+                database=MYSQL_DATABASE, autocommit=True
+            )
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                INSERT INTO predictions (
+                    prediction_id, field_id, crop_type, soil_moisture_pct, temperature_c,
+                    stress_risk_score, stress_risk_category, irrigation_priority, recommended_action,
+                    model_used, timestamp
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    record.get("prediction_id"), record.get("field_id", "CUSTOM_SIMULATION"),
+                    record.get("crop_type", "Unknown"), float(record.get("soil_moisture_pct", 0.0)),
+                    float(record.get("temperature_c", 0.0)), float(record.get("stress_risk_score", 0.0)),
+                    record.get("stress_risk_category", "Unknown"), record.get("irrigation_priority", "Unknown"),
+                    record.get("recommended_action", ""), record.get("model_used", "Decision Tree"),
+                    record.get("timestamp", datetime.datetime.now().isoformat())
+                ))
+            conn.close()
+            return True
+        except Exception as err:
+            print(f"[DB Warning] MySQL failed ({err}), falling back to SQLite.")
             
     # Default: SQLite
     conn = sqlite3.connect(DB_FILE)
@@ -155,6 +182,21 @@ def get_prediction_history(limit: int = 20) -> list:
             db = client[MONGO_DB_NAME]
             logs = list(db.predictions.find({}, {"_id": 0}).sort("timestamp", -1).limit(limit))
             return logs
+        except Exception:
+            pass
+
+    elif DB_BACKEND == "mysql":
+        try:
+            import pymysql
+            conn = pymysql.connect(
+                host=MYSQL_HOST, user=MYSQL_USER, password=MYSQL_PASSWORD,
+                database=MYSQL_DATABASE, cursorclass=pymysql.cursors.DictCursor
+            )
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT * FROM predictions ORDER BY timestamp DESC LIMIT %s", (limit,))
+                rows = cursor.fetchall()
+            conn.close()
+            return rows
         except Exception:
             pass
 
