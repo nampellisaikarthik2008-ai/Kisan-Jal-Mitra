@@ -31,7 +31,7 @@
       body * { visibility: hidden !important; }
       #slipModal, #slipModal * { visibility: visible !important; }
       #slipModal { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; background: transparent !important; }
-      #slipModalContent { box-shadow: none !important; border: 1px solid #999 !important; margin: 0 auto !important; }
+      #slipModalContent { box-shadow: none !important; border: 2px solid #000 !important; margin: 0 auto !important; }
       .no-print { display: none !important; }
     }
     /* Smooth custom scrollbars */
@@ -39,6 +39,15 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    
+    /* Toast Animation */
+    @keyframes slideInUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .toast-animate {
+      animation: slideInUp 0.3s ease-out forwards;
+    }
   </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen font-sans antialiased transition-colors duration-200">
@@ -47,64 +56,64 @@
   <!-- TOP STICKY NAVIGATION HEADER                                            -->
   <!-- ======================================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
       <!-- Brand Logo & Problem Statement Title -->
       <div class="flex items-center gap-3">
-        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white text-xl shadow-md transform hover:rotate-6 transition">
+        <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white text-2xl shadow-lg transform hover:scale-105 transition duration-200">
           🌱
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">Kisan Jal-Mitra</h1>
-            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">PS #19 DECISION SUPPORT</span>
+            <h1 class="text-lg font-black tracking-tight text-slate-900 dark:text-white">Kisan Jal-Mitra</h1>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 shadow-xs">PS #19 DECISION SUPPORT</span>
           </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">UN FAO WaPOR Remote Sensing • Decision Tree AI (R² = 0.9495)</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">UN FAO WaPOR Satellite Telemetry • Decision Tree AI (R² = 0.9495)</p>
         </div>
       </div>
 
-      <!-- Navigation Tabs (Desktop) -->
-      <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold">
-        <button onclick="switchTab('tab-problem')" id="btn-tab-problem" class="tab-btn px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
-          <span>📖</span> <span>PS #19 &amp; Science</span>
+      <!-- Navigation Tabs (Desktop with high-contrast tactile buttons) -->
+      <nav class="hidden lg:flex items-center gap-2 text-xs font-bold">
+        <button onclick="switchTab('tab-problem')" id="btn-tab-problem" class="tab-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/50 dark:hover:bg-slate-700/60 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 flex items-center gap-2 cursor-pointer">
+          <span class="text-base">📖</span> <span>PS #19 &amp; Overview</span>
         </button>
-        <button onclick="switchTab('tab-parcels')" id="btn-tab-parcels" class="tab-btn px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
-          <span>🌾</span> <span>Monitored Parcels (30)</span>
+        <button onclick="switchTab('tab-parcels')" id="btn-tab-parcels" class="tab-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/50 dark:hover:bg-slate-700/60 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 flex items-center gap-2 cursor-pointer">
+          <span class="text-base">🌾</span> <span>Monitored Parcels (30)</span>
         </button>
-        <button onclick="switchTab('tab-simulator')" id="btn-tab-simulator" class="tab-btn active px-3 py-2 rounded-lg bg-emerald-600 text-white shadow-sm transition flex items-center gap-1.5">
-          <span>⚡</span> <span>AI Crop Stress Simulator</span>
+        <button onclick="switchTab('tab-simulator')" id="btn-tab-simulator" class="tab-btn active px-4 py-2.5 rounded-xl bg-emerald-600 text-white shadow-md border border-emerald-600 ring-2 ring-emerald-400/40 hover:bg-emerald-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 flex items-center gap-2 cursor-pointer">
+          <span class="text-base">⚡</span> <span>AI Crop Stress Simulator</span>
         </button>
-        <button onclick="switchTab('tab-benchmarks')" id="btn-tab-benchmarks" class="tab-btn px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
-          <span>📊</span> <span>Model Tournament</span>
+        <button onclick="switchTab('tab-benchmarks')" id="btn-tab-benchmarks" class="tab-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/50 dark:hover:bg-slate-700/60 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 flex items-center gap-2 cursor-pointer">
+          <span class="text-base">📊</span> <span>Model Tournament</span>
         </button>
-        <button onclick="switchTab('tab-audit')" id="btn-tab-audit" class="tab-btn px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
-          <span>🗄️</span> <span>SQL Audit Logs</span>
+        <button onclick="switchTab('tab-audit')" id="btn-tab-audit" class="tab-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50/50 dark:hover:bg-slate-700/60 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 flex items-center gap-2 cursor-pointer">
+          <span class="text-base">🗄️</span> <span>SQL Audit Logs</span>
         </button>
       </nav>
 
       <!-- Right Action Badges & Slip Button -->
-      <div class="flex items-center gap-2">
-        <!-- Live Backend Status Pill -->
-        <div id="backendStatusPill" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-          <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <div class="flex items-center gap-3">
+        <!-- Live Status Pill -->
+        <div id="backendStatusPill" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-xs font-semibold text-emerald-700 dark:text-emerald-300 shadow-xs">
+          <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="backendStatusText">FastAPI Engine Active</span>
         </div>
 
         <!-- Printable Slip Button -->
-        <button onclick="openSlipModalCurrent()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm flex items-center gap-1.5 transition">
-          <span>🧾</span> <span class="hidden sm:inline">Advisory Slip</span>
+        <button onclick="openSlipModalCurrent()" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 transition-all duration-150 cursor-pointer">
+          <span>🧾</span> <span class="hidden sm:inline">Print Advisory Slip</span>
         </button>
       </div>
 
     </div>
 
-    <!-- Mobile Nav Bar -->
-    <div class="lg:hidden flex items-center justify-around border-t border-slate-200 dark:border-slate-800 py-2 px-2 text-xs overflow-x-auto">
-      <button onclick="switchTab('tab-problem')" class="px-2 py-1 font-medium">📖 PS #19</button>
-      <button onclick="switchTab('tab-parcels')" class="px-2 py-1 font-medium">🌾 Parcels</button>
-      <button onclick="switchTab('tab-simulator')" class="px-2 py-1 font-bold text-emerald-600">⚡ Simulator</button>
-      <button onclick="switchTab('tab-benchmarks')" class="px-2 py-1 font-medium">📊 Models</button>
-      <button onclick="switchTab('tab-audit')" class="px-2 py-1 font-medium">🗄️ SQL DB</button>
+    <!-- Mobile Navigation Bar -->
+    <div class="lg:hidden flex items-center justify-around border-t border-slate-200 dark:border-slate-800 py-2.5 px-2 text-xs font-bold bg-slate-100/90 dark:bg-slate-900/90 overflow-x-auto gap-2">
+      <button onclick="switchTab('tab-problem')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-xs">📖 Overview</button>
+      <button onclick="switchTab('tab-parcels')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-xs">🌾 Parcels</button>
+      <button onclick="switchTab('tab-simulator')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-xs">⚡ Simulator</button>
+      <button onclick="switchTab('tab-benchmarks')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-xs">📊 Models</button>
+      <button onclick="switchTab('tab-audit')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-xs">🗄️ SQL DB</button>
     </div>
   </header>
 
@@ -114,64 +123,116 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- ===================================================================== -->
-    <!-- TAB 1: PROBLEM STATEMENT & FAO SCIENCE                                 -->
+    <!-- TAB 1: PROBLEM STATEMENT & VISUAL WORKFLOW (NO FORMULA)                -->
     <!-- ===================================================================== -->
     <section id="tab-problem" class="tab-content hidden space-y-6">
       
       <!-- Hero Banner -->
       <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 text-white shadow-xl space-y-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold tracking-wide border border-white/20">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-xs font-semibold tracking-wide border border-white/20">
           <span>🌍</span> <span>UN Sustainable Development Goals (SDG 6: Clean Water • SDG 2: Zero Hunger)</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">PS #19: Crop Stress &amp; Irrigation Priority Decision Support</h2>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">PS #19: Crop Stress &amp; Irrigation Priority Decision Support</h2>
         <p class="text-sm text-emerald-100 max-w-3xl leading-relaxed">
-          Bridging continental-scale satellite telemetry from the UN Food and Agriculture Organization (FAO WaPOR) to field-level precision irrigation alerts. We convert complex multi-spectral observations into actionable advisories for smallholder farmers and district water allocation authorities.
+          Bridging continental-scale satellite telemetry from the UN Food and Agriculture Organization (FAO WaPOR) to field-level precision irrigation alerts. We convert complex multi-spectral observations into actionable, bilingual advisories for smallholder farmers and district water allocation authorities.
         </p>
-        <div class="flex flex-wrap gap-3 pt-2">
-          <span class="px-3 py-1 rounded-lg bg-emerald-950/70 text-xs font-mono border border-emerald-500/40">5,040 FAO WaPOR Records</span>
-          <span class="px-3 py-1 rounded-lg bg-emerald-950/70 text-xs font-mono border border-emerald-500/40">Decision Tree: R² = 0.9495</span>
-          <span class="px-3 py-1 rounded-lg bg-emerald-950/70 text-xs font-mono border border-emerald-500/40">Zero Overfitting (1.08% Gap)</span>
-          <span class="px-3 py-1 rounded-lg bg-emerald-950/70 text-xs font-mono border border-emerald-500/40">Relational SQL Audit Trail</span>
+        <div class="flex flex-wrap gap-2.5 pt-2">
+          <span class="px-3 py-1 rounded-xl bg-emerald-950/70 text-xs font-bold border border-emerald-500/40">5,040 FAO WaPOR Observations</span>
+          <span class="px-3 py-1 rounded-xl bg-emerald-950/70 text-xs font-bold border border-emerald-500/40">Decision Tree: R² = 0.9495</span>
+          <span class="px-3 py-1 rounded-xl bg-emerald-950/70 text-xs font-bold border border-emerald-500/40">Minimal 1.08% Generalization Gap</span>
+          <span class="px-3 py-1 rounded-xl bg-emerald-950/70 text-xs font-bold border border-emerald-500/40">Dual SQLite &amp; MySQL 8.0 Audit Trail</span>
         </div>
       </div>
 
-      <!-- 3 Science Pillars -->
+      <!-- 3 Core Challenge & Solution Pillars -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="p-5 rounded-2xl border border-red-200 dark:border-red-900/40 bg-white dark:bg-slate-900 shadow-sm space-y-2.5">
-          <div class="h-10 w-10 rounded-xl bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 text-lg">⚠️</div>
-          <h3 class="font-bold text-sm text-slate-900 dark:text-white">1. The Crisis: The Irrigation Paradox</h3>
+        <div class="p-6 rounded-3xl border-2 border-red-200 dark:border-red-900/40 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition space-y-3">
+          <div class="h-12 w-12 rounded-2xl bg-red-100 dark:bg-red-950/60 flex items-center justify-center text-red-600 text-2xl shadow-xs">⚠️</div>
+          <h3 class="font-extrabold text-sm text-slate-900 dark:text-white">1. The Crisis: The Irrigation Paradox</h3>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-            Agriculture consumes <strong>70% of global freshwater</strong>. In developing agricultural basins, over 60% of pumped irrigation water is lost through unguided calendar-based flood irrigation, depleting aquifers and triggering root hypoxia.
+            Agriculture consumes <strong>70% of global freshwater</strong>. In developing basins, over 60% of pumped irrigation is wasted due to calendar-based flood irrigation, depleting groundwater tables and triggering root hypoxia.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-white dark:bg-slate-900 shadow-sm space-y-2.5">
-          <div class="h-10 w-10 rounded-xl bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 text-lg">🛰️</div>
-          <h3 class="font-bold text-sm text-slate-900 dark:text-white">2. The Telemetry: FAO WaPOR Remote Sensing</h3>
+        <div class="p-6 rounded-3xl border-2 border-blue-200 dark:border-blue-900/40 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition space-y-3">
+          <div class="h-12 w-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 flex items-center justify-center text-blue-600 text-2xl shadow-xs">🛰️</div>
+          <h3 class="font-extrabold text-sm text-slate-900 dark:text-white">2. The Data: FAO WaPOR Satellite Telemetry</h3>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-            By monitoring 10-day dekadal intervals, we assimilate <strong>Actual Evapotranspiration (AETI)</strong>, <strong>Precipitation (PCP)</strong>, and <strong>Net Primary Production (NPP)</strong> alongside root-zone soil moisture and ambient temperature.
+            FAO's satellite portal delivers 10-day dekadal observations: <strong>Actual Evapotranspiration (AETI)</strong>, <strong>Precipitation (PCP)</strong>, and <strong>Net Primary Production (NPP)</strong>, tracking crop vigor across vast regions without ground surveys.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl border border-emerald-200 dark:border-emerald-900/40 bg-white dark:bg-slate-900 shadow-sm space-y-2.5">
-          <div class="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 text-lg">🌲</div>
-          <h3 class="font-bold text-sm text-slate-900 dark:text-white">3. The Engine: Champion Decision Tree</h3>
+        <div class="p-6 rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition space-y-3">
+          <div class="h-12 w-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 text-2xl shadow-xs">🌲</div>
+          <h3 class="font-extrabold text-sm text-slate-900 dark:text-white">3. The Engine: Champion Decision Tree</h3>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-            Our single serialized model (<code class="font-mono text-emerald-600">crop_stress_model.pkl</code>) delivers <strong>86.9% classification accuracy</strong> and an R² of <strong>0.9495</strong>, with an ultra-compact 10 KB memory footprint suitable for edge and cloud deployment.
+            Our single serialized model (<code class="font-mono text-emerald-600">crop_stress_model.pkl</code>) delivers <strong>86.9% classification accuracy</strong> and an R² of <strong>0.9495</strong>, outperforming complex ensembles with zero latency.
           </p>
         </div>
       </div>
 
-      <!-- Agronomic Formulation Box -->
-      <div class="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3 shadow-sm">
-        <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-          <span>📐</span> <span>Agronomic Crop Water Deficit Model (FAO-56 Dual Kc Standard)</span>
-        </h3>
-        <p class="text-xs text-slate-600 dark:text-slate-400">
-          The ML pipeline ingests satellite and sensor telemetry to calculate stress vulnerability and rank water allocation:
-        </p>
-        <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-xs text-emerald-700 dark:text-emerald-400 overflow-x-auto leading-relaxed border border-slate-200 dark:border-slate-700">
-          Stress_Risk_Score = [ max(0, 1 - (Soil_Moisture / Critical_Threshold)) * 70 ] + [ max(0, (Temp - 30°C) * 1.5) ] + [ max(0, (AETI - PCP) * 4) ]
+      <!-- Visual 4-Step Interactive Decision Flow (Replaces the raw formula!) -->
+      <div class="p-6 sm:p-8 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <span>🔄</span> <span>How Kisan Jal-Mitra Generates Irrigation Decisions</span>
+            </h3>
+            <p class="text-xs text-slate-500">From satellite orbit to farmer smartphone — clear, end-to-end intelligence</p>
+          </div>
+          <button onclick="switchTab('tab-simulator')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition cursor-pointer">
+            Try AI Simulator →
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Step 1 -->
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 hover:shadow-md transition space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🛰️</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">STEP 1</span>
+            </div>
+            <h4 class="font-bold text-xs text-slate-900 dark:text-white">Satellite Telemetry</h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              FAO WaPOR monitors water loss via Evapotranspiration (AETI) and dekadal rainfall (PCP).
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 hover:shadow-md transition space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🌡️</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300">STEP 2</span>
+            </div>
+            <h4 class="font-bold text-xs text-slate-900 dark:text-white">Field Sensor Input</h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              Root-zone soil moisture sensors and ambient temperature probes detect local heatwaves and dry spells.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 hover:shadow-md transition space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🌲</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">STEP 3</span>
+            </div>
+            <h4 class="font-bold text-xs text-slate-900 dark:text-white">Decision Tree AI</h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              Model computes crop water deficit index ($0-100\%$) and classifies risk into 4 urgency tiers.
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 hover:shadow-md transition space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🚜</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300">STEP 4</span>
+            </div>
+            <h4 class="font-bold text-xs text-slate-900 dark:text-white">Farmer Advisory</h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              Generates printable irrigation ticket with exact depth (mm) and required timeframe to prevent wilting.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -183,29 +244,29 @@
     <section id="tab-parcels" class="tab-content hidden space-y-5">
       
       <!-- Top Filters & Search -->
-      <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="p-5 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 class="text-sm font-bold text-slate-900 dark:text-white">Monitored Agricultural Plots</h2>
-          <p class="text-xs text-slate-500">Telemetry feed from 5,040 FAO WaPOR monitored parcels across major agro-climatic zones</p>
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Monitored Agricultural Plots</h2>
+          <p class="text-xs text-slate-500">Live telemetry from 5,040 FAO WaPOR monitored parcels across major river basins</p>
         </div>
 
         <div class="flex items-center gap-3">
-          <input id="parcelSearch" type="text" placeholder="Search Plot or Region..." oninput="filterParcels()" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+          <input id="parcelSearch" type="text" placeholder="🔍 Search Plot, Crop, or Basin..." oninput="filterParcels()" class="px-4 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition">
           
-          <select id="cropFilter" onchange="filterParcels()" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold focus:ring-2 focus:ring-emerald-500 outline-none">
+          <select id="cropFilter" onchange="filterParcels()" class="px-4 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 focus:border-emerald-500 outline-none cursor-pointer">
             <option value="ALL">All Crops (30 Plots)</option>
-            <option value="Cotton">Cotton (Punjab)</option>
+            <option value="Cotton">Cotton (Punjab Basin)</option>
             <option value="Wheat">Wheat (Indo-Gangetic)</option>
-            <option value="Sorghum">Sorghum (Deccan)</option>
+            <option value="Sorghum">Sorghum (Deccan Plateau)</option>
             <option value="Potato">Potato (Nile Basin)</option>
-            <option value="Tomato">Tomato (Punjab)</option>
+            <option value="Tomato">Tomato (Punjab Basin)</option>
             <option value="Rice">Rice (Kaveri Basin)</option>
           </select>
         </div>
       </div>
 
       <!-- Parcels Grid -->
-      <div id="parcelsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="parcelsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <!-- Injected via JavaScript -->
       </div>
 
@@ -214,151 +275,198 @@
     <!-- ===================================================================== -->
     <!-- TAB 3: AI CROP STRESS SIMULATOR (Heart of the Decision Engine)        -->
     <!-- ===================================================================== -->
-    <section id="tab-simulator" class="tab-content space-y-5">
+    <section id="tab-simulator" class="tab-content space-y-6">
       
-      <!-- 1-Click Evaluator Scenarios Header -->
-      <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-3">
+      <!-- 1-Click Evaluator Scenarios Header with Clear Visual Buttons -->
+      <div class="p-6 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-            <span>⚡</span> <span>1-Click Evaluator Demonstration Scenarios (Click to test instantly)</span>
-          </span>
-          <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">Decision Tree Tested</span>
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-2">
+              <span class="text-base">⚡</span> <span>1-Click Evaluator Demonstration Scenarios</span>
+            </span>
+            <p class="text-xs text-slate-500 mt-0.5">Click any button below to instantly load representative agro-climatic conditions:</p>
+          </div>
+          <button onclick="resetSliders()" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1.5 transition cursor-pointer">
+            <span>↺</span> <span>Reset Defaults</span>
+          </button>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <button onclick="applyPreset('drought')" class="p-3.5 rounded-xl border border-red-200 dark:border-red-900/60 bg-red-50/70 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-left transition flex items-center gap-3 group">
-            <span class="text-3xl group-hover:scale-110 transition">🚨</span>
-            <div>
-              <div class="font-bold text-red-700 dark:text-red-400 text-xs">Simulate Severe Drought</div>
-              <div class="text-[11px] text-red-600/80 dark:text-red-300">Moisture 12% • Temp 39°C</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Drought Preset -->
+          <button onclick="applyPreset('drought')" class="p-4 rounded-2xl border-2 border-red-300 dark:border-red-900 bg-red-50/80 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/60 shadow-sm hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-left transition-all duration-200 flex items-center justify-between group cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl group-hover:scale-110 transition duration-150">🚨</span>
+              <div>
+                <div class="font-black text-red-800 dark:text-red-300 text-xs">Severe Drought Stress</div>
+                <div class="text-[11px] text-red-600 dark:text-red-400 font-semibold">Moisture 12% • Temp 39°C</div>
+              </div>
             </div>
+            <span class="px-2.5 py-1 rounded-lg bg-red-600 text-white text-[10px] font-bold group-hover:bg-red-700 transition">Test →</span>
           </button>
 
-          <button onclick="applyPreset('heatwave')" class="p-3.5 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-left transition flex items-center gap-3 group">
-            <span class="text-3xl group-hover:scale-110 transition">⚠️</span>
-            <div>
-              <div class="font-bold text-amber-700 dark:text-amber-400 text-xs">Simulate Heatwave Deficit</div>
-              <div class="text-[11px] text-amber-600/80 dark:text-amber-300">Moisture 21% • Temp 34°C</div>
+          <!-- Heatwave Preset -->
+          <button onclick="applyPreset('heatwave')" class="p-4 rounded-2xl border-2 border-amber-300 dark:border-amber-900 bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 shadow-sm hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-left transition-all duration-200 flex items-center justify-between group cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl group-hover:scale-110 transition duration-150">⚠️</span>
+              <div>
+                <div class="font-black text-amber-800 dark:text-amber-300 text-xs">Heatwave Deficit</div>
+                <div class="text-[11px] text-amber-600 dark:text-amber-400 font-semibold">Moisture 21% • Temp 34°C</div>
+              </div>
             </div>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-600 text-white text-[10px] font-bold group-hover:bg-amber-700 transition">Test →</span>
           </button>
 
-          <button onclick="applyPreset('optimal')" class="p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/70 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-left transition flex items-center gap-3 group">
-            <span class="text-3xl group-hover:scale-110 transition">💧</span>
-            <div>
-              <div class="font-bold text-emerald-700 dark:text-emerald-400 text-xs">Simulate Post-Rain Optimal</div>
-              <div class="text-[11px] text-emerald-600/80 dark:text-emerald-300">Moisture 42% • Temp 27°C</div>
+          <!-- Optimal Preset -->
+          <button onclick="applyPreset('optimal')" class="p-4 rounded-2xl border-2 border-emerald-300 dark:border-emerald-900 bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-left transition-all duration-200 flex items-center justify-between group cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl group-hover:scale-110 transition duration-150">💧</span>
+              <div>
+                <div class="font-black text-emerald-800 dark:text-emerald-300 text-xs">Post-Rain Optimal</div>
+                <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Moisture 42% • Temp 27°C</div>
+              </div>
             </div>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-bold group-hover:bg-emerald-700 transition">Test →</span>
           </button>
         </div>
       </div>
 
       <!-- Main Dual Column Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         <!-- Left Column: Sliders & Controls (7 Cols) -->
-        <div class="lg:col-span-7 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-5">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div class="lg:col-span-7 p-6 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <h2 class="text-sm font-bold text-slate-900 dark:text-white">Field Sensor &amp; Remote Sensing Sliders</h2>
-              <p class="text-xs text-slate-500">Tune root-zone sensor telemetry and satellite inputs in real time</p>
+              <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Interactive Field Telemetry Controls</h2>
+              <p class="text-xs text-slate-500">Move any slider to trigger live decision tree recalculation</p>
             </div>
-            <select id="simCropSelect" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 font-mono text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-              <option value="Cotton">Crop: Cotton (Critical: 35%)</option>
-              <option value="Wheat">Crop: Wheat (Critical: 32%)</option>
-              <option value="Sorghum">Crop: Sorghum (Critical: 30%)</option>
-              <option value="Potato">Crop: Potato (Critical: 40%)</option>
-              <option value="Tomato">Crop: Tomato (Critical: 38%)</option>
-              <option value="Rice">Crop: Rice (Critical: 45%)</option>
+            <select id="simCropSelect" onchange="onCropChanged()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold text-xs text-slate-800 dark:text-slate-200 border-2 border-slate-200 dark:border-slate-700 outline-none cursor-pointer">
+              <option value="Cotton" data-crit="35.0">Crop: Cotton (Threshold: 35%)</option>
+              <option value="Wheat" data-crit="32.0">Crop: Wheat (Threshold: 32%)</option>
+              <option value="Sorghum" data-crit="30.0">Crop: Sorghum (Threshold: 30%)</option>
+              <option value="Potato" data-crit="40.0">Crop: Potato (Threshold: 40%)</option>
+              <option value="Tomato" data-crit="38.0">Crop: Tomato (Threshold: 38%)</option>
+              <option value="Rice" data-crit="45.0">Crop: Rice (Threshold: 45%)</option>
             </select>
           </div>
 
           <!-- Sliders -->
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between text-xs mb-1.5 font-medium">
-                <span class="text-slate-600 dark:text-slate-300">Root-Zone Soil Moisture (%)</span>
-                <span id="label_sm" class="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-sm">21.0%</span>
+          <div class="space-y-5">
+            <!-- Soil Moisture Slider -->
+            <div class="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/80">
+              <div class="flex justify-between items-center text-xs mb-2">
+                <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                  <span>🌱</span> <span>Root-Zone Soil Moisture</span>
+                </span>
+                <span id="label_sm" class="px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 font-mono font-black text-emerald-700 dark:text-emerald-300 text-sm">21.0%</span>
               </div>
-              <input id="input_sm" type="range" min="5" max="60" value="21" step="0.5" oninput="runLiveInference()" class="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-0.5 font-mono"><span>5% (Wilting Point)</span><span>Critical Threshold: 35%</span><span>60% (Field Capacity)</span></div>
+              <input id="input_sm" type="range" min="5" max="60" value="21" step="0.5" oninput="runLiveInference()" class="w-full accent-emerald-600 h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                <span>5% (Wilting Point)</span>
+                <span id="sliderCritLabel" class="text-emerald-600 font-bold">Target Threshold: 35%</span>
+                <span>60% (Saturation)</span>
+              </div>
             </div>
 
-            <div>
-              <div class="flex justify-between text-xs mb-1.5 font-medium">
-                <span class="text-slate-600 dark:text-slate-300">Ambient Air Temperature (°C)</span>
-                <span id="label_temp" class="font-mono font-bold text-orange-600 dark:text-orange-400 text-sm">34.0°C</span>
+            <!-- Temperature Slider -->
+            <div class="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/80">
+              <div class="flex justify-between items-center text-xs mb-2">
+                <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                  <span>🌡️</span> <span>Ambient Air Temperature</span>
+                </span>
+                <span id="label_temp" class="px-2.5 py-0.5 rounded-lg bg-orange-100 dark:bg-orange-950 font-mono font-black text-orange-700 dark:text-orange-300 text-sm">34.0°C</span>
               </div>
-              <input id="input_temp" type="range" min="15" max="48" value="34" step="0.5" oninput="runLiveInference()" class="w-full accent-orange-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-0.5 font-mono"><span>15°C (Cool)</span><span>Heat Stress Threshold: > 30°C</span><span>48°C (Extreme Heat)</span></div>
+              <input id="input_temp" type="range" min="15" max="48" value="34" step="0.5" oninput="runLiveInference()" class="w-full accent-orange-600 h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                <span>15°C (Cool)</span>
+                <span class="text-orange-600 font-bold">Heat Stress: &gt; 30°C</span>
+                <span>48°C (Extreme Heat)</span>
+              </div>
             </div>
 
+            <!-- FAO WaPOR Evapotranspiration & Rainfall -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <div class="flex justify-between text-xs mb-1.5 font-medium">
-                  <span class="text-slate-600 dark:text-slate-300">FAO WaPOR AETI (mm/day)</span>
-                  <span id="label_aeti" class="font-mono font-bold text-blue-600 dark:text-blue-400 text-sm">0.75 mm</span>
+              <div class="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/80">
+                <div class="flex justify-between items-center text-xs mb-2">
+                  <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                    <span>🛰️</span> <span>WaPOR AETI</span>
+                  </span>
+                  <span id="label_aeti" class="px-2 py-0.5 rounded-lg bg-blue-100 dark:bg-blue-950 font-mono font-black text-blue-700 dark:text-blue-300 text-xs">0.75 mm</span>
                 </div>
-                <input id="input_aeti" type="range" min="0.1" max="5.0" value="0.75" step="0.05" oninput="runLiveInference()" class="w-full accent-blue-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer">
+                <input id="input_aeti" type="range" min="0.1" max="5.0" value="0.75" step="0.05" oninput="runLiveInference()" class="w-full accent-blue-600 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                <div class="text-[10px] text-slate-400 mt-1">Daily crop evapotranspiration</div>
               </div>
 
-              <div>
-                <div class="flex justify-between text-xs mb-1.5 font-medium">
-                  <span class="text-slate-600 dark:text-slate-300">WaPOR Rainfall PCP (mm/day)</span>
-                  <span id="label_pcp" class="font-mono font-bold text-teal-600 dark:text-teal-400 text-sm">0.05 mm</span>
+              <div class="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/80">
+                <div class="flex justify-between items-center text-xs mb-2">
+                  <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                    <span>🌧️</span> <span>WaPOR Rainfall</span>
+                  </span>
+                  <span id="label_pcp" class="px-2 py-0.5 rounded-lg bg-teal-100 dark:bg-teal-950 font-mono font-black text-teal-700 dark:text-teal-300 text-xs">0.05 mm</span>
                 </div>
-                <input id="input_pcp" type="range" min="0.0" max="10.0" value="0.05" step="0.05" oninput="runLiveInference()" class="w-full accent-teal-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer">
+                <input id="input_pcp" type="range" min="0.0" max="10.0" value="0.05" step="0.05" oninput="runLiveInference()" class="w-full accent-teal-600 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                <div class="text-[10px] text-slate-400 mt-1">Daily dekadal precipitation</div>
               </div>
             </div>
           </div>
 
-          <!-- Bottom Action Buttons -->
-          <div class="flex items-center gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-            <button onclick="savePredictionToDatabase()" id="btnSaveDB" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95">
-              <span>💾</span> <span id="saveBtnText">Save Diagnosis to SQL Database</span>
+          <!-- Bottom Action Buttons: Prominent and Tactile -->
+          <div class="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+            <button onclick="savePredictionToDatabase()" id="btnSaveDB" class="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 transition duration-150 cursor-pointer">
+              <span class="text-base">💾</span> <span id="saveBtnText">Save Diagnosis to SQL Database</span>
             </button>
-            <button onclick="openSlipModalCurrent()" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold flex items-center gap-2 transition">
-              <span>🧾</span> <span>Print Advisory Slip</span>
+            <button onclick="openSlipModalCurrent()" class="w-full sm:w-auto py-3 px-5 rounded-2xl border-2 border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 font-extrabold text-xs shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 transition duration-150 cursor-pointer">
+              <span class="text-base">🧾</span> <span>Print Advisory Slip</span>
             </button>
           </div>
         </div>
 
         <!-- Right Column: Live Decision Tree Output Card (5 Cols) -->
-        <div id="simOutputBox" class="lg:col-span-5 p-6 rounded-3xl border border-amber-300 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm flex flex-col justify-between space-y-4 transition-all duration-300">
+        <div id="simOutputBox" class="lg:col-span-5 p-6 rounded-3xl border-2 border-amber-300 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-300">
           
           <div class="space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Live Decision Tree Inference</span>
-              <span id="simBadge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-200 text-amber-900 dark:bg-amber-900 dark:text-amber-200 shadow-sm">HIGH STRESS</span>
+              <div class="flex items-center gap-2">
+                <span id="simPlantEmoji" class="text-2xl animate-bounce">🍂</span>
+                <span class="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">Live AI Diagnosis</span>
+              </div>
+              <span id="simBadge" class="px-3.5 py-1 rounded-full text-xs font-black bg-amber-200 text-amber-900 dark:bg-amber-900 dark:text-amber-200 shadow-xs">HIGH STRESS</span>
             </div>
 
             <!-- Big Gauge Score Display -->
-            <div class="p-5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-inner">
-              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Crop Stress Vulnerability Index</div>
+            <div class="p-5 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-sm">
+              <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Crop Stress Vulnerability Index</div>
               <div class="flex items-baseline justify-center gap-2">
                 <span id="simScore" class="text-6xl font-black font-mono text-amber-600 dark:text-amber-400">64.0</span>
                 <span class="text-xs font-bold text-slate-400">/ 100</span>
               </div>
-              <div class="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
-                <div id="simBar" class="h-full bg-amber-500 transition-all duration-300" style="width: 64%"></div>
+              <div class="h-3.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-2 p-0.5">
+                <div id="simBar" class="h-full bg-amber-500 rounded-full transition-all duration-300" style="width: 64%"></div>
               </div>
             </div>
 
-            <!-- Priority & Action Box -->
-            <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-amber-200 dark:border-amber-900/50 text-xs space-y-2">
-              <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span class="text-base">🚜</span> <span id="simPriority">Priority: High (Within 48 Hours)</span>
+            <!-- Priority & Recommended Water Volume Box -->
+            <div class="p-4 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-amber-200 dark:border-amber-900/50 text-xs space-y-2.5 shadow-xs">
+              <div class="font-extrabold text-slate-900 dark:text-white flex items-center gap-2 text-sm">
+                <span class="text-lg">🚜</span> <span id="simPriority">Priority: High (Within 48 Hours)</span>
               </div>
               <p id="simAction" class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
                 Schedule full irrigation cycle immediately; crop approaching permanent wilting point.
               </p>
+              
+              <!-- Live Water Requirement Metric -->
+              <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span class="text-slate-500 font-semibold">Recommended Water Volume:</span>
+                <span id="simWaterVol" class="font-black font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-lg border border-emerald-200 dark:border-emerald-800">~35 mm (3.5 lakh L/ha)</span>
+              </div>
             </div>
           </div>
 
-          <!-- Model Provenance -->
-          <div class="pt-3 border-t border-amber-200/80 dark:border-amber-900/40 text-[11px] text-slate-500 space-y-1.5">
+          <!-- Model Provenance Details -->
+          <div class="pt-4 border-t border-amber-200/80 dark:border-amber-900/40 text-[11px] text-slate-500 space-y-1.5 font-medium">
             <div class="flex justify-between"><span>Model Algorithm:</span> <strong class="text-slate-700 dark:text-slate-300">Decision Tree (crop_stress_model.pkl)</strong></div>
-            <div class="flex justify-between"><span>Accuracy &amp; Variance:</span> <strong class="text-emerald-600">R² = 0.9495 • 86.9% Acc</strong></div>
-            <div class="flex justify-between"><span>Backend Storage:</span> <strong id="dbStorageLabel" class="text-blue-600">SQLite3 &amp; MySQL 8.0 Ready</strong></div>
+            <div class="flex justify-between"><span>Evaluation Variance:</span> <strong class="text-emerald-600">R² = 0.9495 • 86.9% Acc</strong></div>
+            <div class="flex justify-between"><span>Relational SQL Sync:</span> <strong id="dbStorageLabel" class="text-blue-600">SQLite3 &amp; MySQL 8.0 Ready</strong></div>
           </div>
 
         </div>
@@ -370,122 +478,122 @@
     <!-- ===================================================================== -->
     <!-- TAB 4: MODEL TOURNAMENT & SHAP BENCHMARKS                             -->
     <!-- ===================================================================== -->
-    <section id="tab-benchmarks" class="tab-content hidden space-y-5">
+    <section id="tab-benchmarks" class="tab-content hidden space-y-6">
       
-      <div class="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-5">
+      <div class="p-6 sm:p-8 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-6">
         <div>
-          <h2 class="text-base font-bold text-slate-900 dark:text-white">Machine Learning Model Tournament &amp; Evaluation</h2>
+          <h2 class="text-base font-black text-slate-900 dark:text-white">Machine Learning Model Tournament &amp; Evaluation</h2>
           <p class="text-xs text-slate-500">Benchmarking 6 algorithms on 5,040 FAO WaPOR records using 80/20 Train-Test Split and 5-Fold Cross-Validation</p>
         </div>
 
         <!-- Benchmark Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
           <table class="w-full text-xs text-left">
-            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">
+            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-extrabold uppercase tracking-wider text-[11px]">
               <tr>
-                <th class="p-3">Model Architecture</th>
-                <th class="p-3">Classification Accuracy</th>
-                <th class="p-3">R² Score (Variance)</th>
-                <th class="p-3">MAE (Error)</th>
-                <th class="p-3">Generalization Gap</th>
-                <th class="p-3">Tournament Status</th>
+                <th class="p-3.5">Model Architecture</th>
+                <th class="p-3.5">Classification Accuracy</th>
+                <th class="p-3.5">R² Score (Variance)</th>
+                <th class="p-3.5">MAE (Error)</th>
+                <th class="p-3.5">Generalization Gap</th>
+                <th class="p-3.5">Tournament Status</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800 font-medium">
-              <tr class="bg-emerald-50/50 dark:bg-emerald-950/20 font-bold text-emerald-900 dark:text-emerald-200">
-                <td class="p-3 flex items-center gap-2"><span>🏆</span> <span>Decision Tree (max_depth=6)</span></td>
-                <td class="p-3 text-emerald-600 dark:text-emerald-400">86.90%</td>
-                <td class="p-3 text-emerald-600 dark:text-emerald-400">0.9495</td>
-                <td class="p-3">3.83</td>
-                <td class="p-3">1.08% (Optimal)</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px]">CHAMPION</span></td>
+              <tr class="bg-emerald-50/70 dark:bg-emerald-950/30 font-bold text-emerald-900 dark:text-emerald-200">
+                <td class="p-3.5 flex items-center gap-2"><span>🏆</span> <span>Decision Tree (max_depth=6)</span></td>
+                <td class="p-3.5 text-emerald-600 dark:text-emerald-400 font-black">86.90%</td>
+                <td class="p-3.5 text-emerald-600 dark:text-emerald-400 font-black">0.9495</td>
+                <td class="p-3.5 font-bold">3.83</td>
+                <td class="p-3.5 font-bold text-emerald-700">1.08% (Optimal)</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-black shadow-xs">CHAMPION</span></td>
               </tr>
               <tr>
-                <td class="p-3">Support Vector Regressor (SVR)</td>
-                <td class="p-3 text-slate-400">—</td>
-                <td class="p-3">0.9408</td>
-                <td class="p-3">4.12</td>
-                <td class="p-3">2.14%</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 text-[10px]">Runner-up</span></td>
+                <td class="p-3.5">Support Vector Regressor (SVR)</td>
+                <td class="p-3.5 text-slate-400">—</td>
+                <td class="p-3.5">0.9408</td>
+                <td class="p-3.5">4.12</td>
+                <td class="p-3.5">2.14%</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">Runner-up</span></td>
               </tr>
               <tr>
-                <td class="p-3">K-Nearest Neighbors (KNN, k=7)</td>
-                <td class="p-3">79.37%</td>
-                <td class="p-3">0.9231</td>
-                <td class="p-3">4.87</td>
-                <td class="p-3">3.40%</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 text-[10px]">Evaluated</span></td>
+                <td class="p-3.5">K-Nearest Neighbors (KNN, k=7)</td>
+                <td class="p-3.5">79.37%</td>
+                <td class="p-3.5">0.9231</td>
+                <td class="p-3.5">4.87</td>
+                <td class="p-3.5">3.40%</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">Evaluated</span></td>
               </tr>
               <tr>
-                <td class="p-3">Random Forest (50 Trees)</td>
-                <td class="p-3">75.30%</td>
-                <td class="p-3">0.9028</td>
-                <td class="p-3">5.45</td>
-                <td class="p-3">4.10%</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 text-[10px]">Evaluated</span></td>
+                <td class="p-3.5">Random Forest (50 Trees)</td>
+                <td class="p-3.5">75.30%</td>
+                <td class="p-3.5">0.9028</td>
+                <td class="p-3.5">5.45</td>
+                <td class="p-3.5">4.10%</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">Evaluated</span></td>
               </tr>
               <tr>
-                <td class="p-3">Ridge Regression (alpha=10.0)</td>
-                <td class="p-3 text-slate-400">—</td>
-                <td class="p-3">0.8927</td>
-                <td class="p-3">6.12</td>
-                <td class="p-3">1.10%</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 text-[10px]">Evaluated</span></td>
+                <td class="p-3.5">Ridge Regression (alpha=10.0)</td>
+                <td class="p-3.5 text-slate-400">—</td>
+                <td class="p-3.5">0.8927</td>
+                <td class="p-3.5">6.12</td>
+                <td class="p-3.5">1.10%</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">Evaluated</span></td>
               </tr>
               <tr>
-                <td class="p-3">Linear OLS Regression</td>
-                <td class="p-3 text-slate-400">—</td>
-                <td class="p-3">0.8928</td>
-                <td class="p-3">6.15</td>
-                <td class="p-3">1.12%</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 text-[10px]">Baseline</span></td>
+                <td class="p-3.5">Linear OLS Regression</td>
+                <td class="p-3.5 text-slate-400">—</td>
+                <td class="p-3.5">0.8928</td>
+                <td class="p-3.5">6.15</td>
+                <td class="p-3.5">1.12%</td>
+                <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">Baseline</span></td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <!-- SHAP Feature Importance Bars -->
-        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-          <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500">SHAP / Permutation Feature Importance Ranking (Explainable AI)</h3>
+        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4">
+          <h3 class="font-extrabold text-xs uppercase tracking-wider text-slate-500">SHAP / Permutation Feature Importance Ranking (Explainable AI)</h3>
           
-          <div class="space-y-2 text-xs">
+          <div class="space-y-3 text-xs">
             <div>
-              <div class="flex justify-between mb-1">
-                <span class="font-semibold">1. Root-Zone Soil Moisture (`soil_moisture_pct`)</span>
-                <span class="font-mono font-bold text-emerald-600">71.05%</span>
+              <div class="flex justify-between mb-1.5">
+                <span class="font-bold text-slate-800 dark:text-slate-200">1. Root-Zone Soil Moisture (`soil_moisture_pct`)</span>
+                <span class="font-mono font-black text-emerald-600">71.05% Importance</span>
               </div>
-              <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-emerald-500" style="width: 71.05%"></div>
+              <div class="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 71.05%"></div>
               </div>
             </div>
 
             <div>
-              <div class="flex justify-between mb-1">
-                <span class="font-semibold">2. Crop Critical Moisture Threshold (`crop_critical_sm`)</span>
-                <span class="font-mono font-bold text-teal-600">8.88%</span>
+              <div class="flex justify-between mb-1.5">
+                <span class="font-bold text-slate-800 dark:text-slate-200">2. Crop Critical Moisture Threshold (`crop_critical_sm`)</span>
+                <span class="font-mono font-black text-teal-600">8.88% Importance</span>
               </div>
-              <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-teal-500" style="width: 8.88%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="font-semibold">3. FAO WaPOR Evapotranspiration (`wapor_aeti_mm_day`)</span>
-                <span class="font-mono font-bold text-blue-600">7.34%</span>
-              </div>
-              <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500" style="width: 7.34%"></div>
+              <div class="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-teal-500 rounded-full" style="width: 8.88%"></div>
               </div>
             </div>
 
             <div>
-              <div class="flex justify-between mb-1">
-                <span class="font-semibold">4. Ambient Air Temperature (`temperature_c`)</span>
-                <span class="font-mono font-bold text-orange-600">3.28%</span>
+              <div class="flex justify-between mb-1.5">
+                <span class="font-bold text-slate-800 dark:text-slate-200">3. FAO WaPOR Evapotranspiration (`wapor_aeti_mm_day`)</span>
+                <span class="font-mono font-black text-blue-600">7.34% Importance</span>
               </div>
-              <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-orange-500" style="width: 3.28%"></div>
+              <div class="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 7.34%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1.5">
+                <span class="font-bold text-slate-800 dark:text-slate-200">4. Ambient Air Temperature (`temperature_c`)</span>
+                <span class="font-mono font-black text-orange-600">3.28% Importance</span>
+              </div>
+              <div class="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-500 rounded-full" style="width: 3.28%"></div>
               </div>
             </div>
           </div>
@@ -500,33 +608,33 @@
     <!-- ===================================================================== -->
     <section id="tab-audit" class="tab-content hidden space-y-5">
       
-      <div class="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
-        <div class="flex flex-wrap items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 gap-3">
+      <div class="p-6 sm:p-8 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-5">
+        <div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-3">
           <div>
-            <h2 class="text-sm font-bold text-slate-900 dark:text-white">SQL Database Prediction Audit Trail</h2>
+            <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">SQL Database Prediction Audit Trail</h2>
             <p class="text-xs text-slate-500">Live query representation of `predictions` table (`crop_stress_database.sqlite3` / MySQL 8.0)</p>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="fetchHistoryFromBackend()" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
+            <button onclick="fetchHistoryFromBackend()" class="px-4 py-2 rounded-xl border-2 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold flex items-center gap-2 transition hover:-translate-y-0.5 cursor-pointer">
               <span>🔄</span> <span>Sync from DB</span>
             </button>
-            <span id="auditDbBadge" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold">Relational SQL</span>
+            <span id="auditDbBadge" class="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-black border border-emerald-300 dark:border-emerald-800">Relational SQL</span>
           </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
           <table class="w-full text-xs text-left">
-            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">
+            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase tracking-wider text-[10px]">
               <tr>
-                <th class="p-2.5">Prediction ID</th>
-                <th class="p-2.5">Plot ID</th>
-                <th class="p-2.5">Crop</th>
-                <th class="p-2.5">Soil Moisture</th>
-                <th class="p-2.5">Temp</th>
-                <th class="p-2.5">Stress Score</th>
-                <th class="p-2.5">Category</th>
-                <th class="p-2.5">Irrigation Priority</th>
-                <th class="p-2.5">Timestamp</th>
+                <th class="p-3">Prediction ID</th>
+                <th class="p-3">Plot ID</th>
+                <th class="p-3">Crop</th>
+                <th class="p-3">Soil Moisture</th>
+                <th class="p-3">Temp</th>
+                <th class="p-3">Stress Score</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Irrigation Priority</th>
+                <th class="p-3">Timestamp</th>
               </tr>
             </thead>
             <tbody id="auditTableBody" class="divide-y divide-slate-200 dark:divide-slate-800 font-mono text-[11px]">
@@ -544,47 +652,56 @@
   <!-- MODAL: OFFICIAL FARMER IRRIGATION ADVISORY SLIP                        -->
   <!-- ======================================================================= -->
   <div id="slipModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div id="slipModalContent" class="bg-white text-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-300 font-sans space-y-4">
+    <div id="slipModalContent" class="bg-white text-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl border-2 border-slate-300 font-sans space-y-4">
       
       <!-- Slip Header -->
       <div class="text-center pb-3 border-b-2 border-dashed border-slate-300">
-        <span class="text-3xl block mb-1">🌾</span>
+        <span class="text-4xl block mb-1">🌾</span>
         <h3 class="text-lg font-black tracking-tight">KISAN JAL-MITRA</h3>
-        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Official Irrigation Advisory Slip</p>
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-black">Official Irrigation Advisory Slip</p>
       </div>
 
       <!-- Ticket Data -->
-      <div class="text-xs space-y-2 py-1">
-        <div class="flex justify-between"><span class="text-slate-500">Ticket ID:</span> <span id="slipModalId" class="font-mono font-bold">KM-7FF374</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Farmer Plot:</span> <span id="slipModalPlot" class="font-semibold">FIELD_0042 (Cotton)</span></div>
+      <div class="text-xs space-y-2 py-1 font-medium">
+        <div class="flex justify-between"><span class="text-slate-500">Ticket ID:</span> <span id="slipModalId" class="font-mono font-bold text-slate-900">KM-7FF374</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Farmer Plot:</span> <span id="slipModalPlot" class="font-bold text-slate-900">FIELD_0042 (Cotton)</span></div>
         <div class="flex justify-between"><span class="text-slate-500">Region:</span> <span id="slipModalRegion">Punjab Basin</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">WaPOR Dekad:</span> <span class="font-mono">2025-01-D1 (Satellite Derived)</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Diagnosed Moisture:</span> <span id="slipModalSm" class="font-bold text-orange-600">21.0%</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">WaPOR Dekad:</span> <span class="font-mono">2025-01-D1 (Satellite)</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Diagnosed Moisture:</span> <span id="slipModalSm" class="font-black text-orange-600">21.0%</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Water Volume:</span> <span id="slipModalWater" class="font-black text-emerald-700">~35 mm / hectare</span></div>
       </div>
 
       <!-- Recommendation Card -->
-      <div id="slipModalBox" class="p-3.5 rounded-2xl bg-orange-50 border border-orange-300 text-center space-y-1">
-        <div class="text-[10px] uppercase font-bold text-orange-800">Irrigation Priority Recommendation</div>
+      <div id="slipModalBox" class="p-3.5 rounded-2xl bg-orange-50 border-2 border-orange-300 text-center space-y-1">
+        <div class="text-[10px] uppercase font-black text-orange-800">Irrigation Priority Recommendation</div>
         <div id="slipModalPriority" class="text-sm font-black text-orange-950">HIGH PRIORITY (Within 48 Hours)</div>
         <div id="slipModalDetail" class="text-[11px] text-orange-900 leading-tight">Apply ~35 mm depth of water to prevent permanent crop wilting.</div>
       </div>
 
       <!-- Footer & Verification Stamp -->
       <div class="pt-3 border-t-2 border-dashed border-slate-300 text-[10px] text-center text-slate-500 space-y-1">
-        <p class="font-semibold">Verified by Decision Tree Engine (R²: 0.9495 • Accuracy: 86.9%)</p>
+        <p class="font-bold">Verified by Decision Tree Engine (R²: 0.9495 • Accuracy: 86.9%)</p>
         <p class="font-mono text-[9px] text-slate-400">Deployed 24/7 on Render • https://kisan-jal-mitra.onrender.com</p>
       </div>
 
       <!-- Buttons -->
-      <div class="flex gap-2 pt-2 no-print">
-        <button onclick="window.print()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition">
+      <div class="flex gap-2.5 pt-2 no-print">
+        <button onclick="window.print()" class="flex-1 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition cursor-pointer">
           <span>🖨️</span> <span>Print / Save PDF</span>
         </button>
-        <button onclick="toggleSlipModal(false)" class="px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+        <button onclick="toggleSlipModal(false)" class="px-5 py-3 rounded-2xl border-2 border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100 transition cursor-pointer">
           Close
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Interactive Toast Notification Popup -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 text-xs font-bold">
+      <span id="toastIcon" class="text-xl">✅</span>
+      <span id="toastMessage">Scenario Loaded!</span>
     </div>
   </div>
 
@@ -617,20 +734,30 @@
       { id: "PRED_24D8D22C", field: "SIM_PARCEL", crop: "Cotton", sm: 18.5, temp: 34.2, score: 64.0, cat: "High", prio: "High (Within 48h)", time: "2026-11-23 14:05:00" },
     ];
 
+    function showToast(message, icon = "✅") {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastIcon').innerText = icon;
+      document.getElementById('toastMessage').innerText = message;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2500);
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       const target = document.getElementById(tabId);
       if (target) target.classList.remove('hidden');
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
-        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+        btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-md', 'border-emerald-600', 'ring-2', 'ring-emerald-400/40');
+        btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-200', 'border-slate-200', 'dark:border-slate-700');
       });
 
       const activeBtn = document.getElementById('btn-' + tabId);
       if (activeBtn) {
-        activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
-        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+        activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md', 'border-emerald-600', 'ring-2', 'ring-emerald-400/40');
+        activeBtn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-200', 'border-slate-200', 'dark:border-slate-700');
       }
     }
 
@@ -647,25 +774,25 @@
         if (p.cat === "Critical") badgeColor = "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-red-300";
 
         const card = document.createElement('div');
-        card.className = "p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition cursor-pointer space-y-3";
+        card.className = "p-5 rounded-3xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:border-emerald-500 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer space-y-3.5";
         card.onclick = () => loadParcelIntoSimulator(p);
         card.innerHTML = `
           <div class="flex items-center justify-between">
-            <span class="font-bold text-xs text-slate-900 dark:text-white font-mono">${p.id}</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">${p.cat.toUpperCase()}</span>
+            <span class="font-black text-xs text-slate-900 dark:text-white font-mono">${p.id}</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black border ${badgeColor}">${p.cat.toUpperCase()}</span>
           </div>
-          <div class="text-xs">
-            <div class="font-bold text-slate-800 dark:text-slate-200">${p.crop} (${p.stage})</div>
-            <div class="text-slate-500 text-[11px]">${p.region}</div>
+          <div>
+            <div class="font-extrabold text-sm text-slate-800 dark:text-slate-100">${p.crop} (${p.stage})</div>
+            <div class="text-slate-500 text-xs">${p.region}</div>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-[11px] font-mono bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-100 dark:border-slate-800">
             <div><span class="text-slate-400">Moisture:</span> <strong>${p.sm}%</strong></div>
             <div><span class="text-slate-400">Temp:</span> <strong>${p.temp}°C</strong></div>
           </div>
-          <div class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2">
+          <div class="text-xs text-slate-600 dark:text-slate-300 leading-snug line-clamp-2">
             ${p.action}
           </div>
-          <button class="w-full py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1 transition">
+          <button class="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer">
             <span>⚡</span> <span>Load into AI Simulator</span>
           </button>
         `;
@@ -693,8 +820,29 @@
       document.getElementById('input_aeti').value = p.aeti;
       document.getElementById('input_pcp').value = p.pcp || 0.05;
       document.getElementById('simCropSelect').value = p.crop;
+      onCropChanged();
       runLiveInference();
+      showToast(`Loaded ${p.id} (${p.crop}) into AI Simulator!`, "🌾");
       switchTab('tab-simulator');
+    }
+
+    function onCropChanged() {
+      const select = document.getElementById('simCropSelect');
+      const opt = select.options[select.selectedIndex];
+      const crit = opt.getAttribute('data-crit') || "35.0";
+      document.getElementById('sliderCritLabel').innerText = `Target Threshold: ${crit}%`;
+      runLiveInference();
+    }
+
+    function resetSliders() {
+      document.getElementById('input_sm').value = 21.0;
+      document.getElementById('input_temp').value = 34.0;
+      document.getElementById('input_aeti').value = 0.75;
+      document.getElementById('input_pcp').value = 0.05;
+      document.getElementById('simCropSelect').value = "Cotton";
+      onCropChanged();
+      runLiveInference();
+      showToast("Telemetry reset to baseline values", "↺");
     }
 
     function applyPreset(type) {
@@ -703,16 +851,19 @@
         document.getElementById('input_temp').value = 39.0;
         document.getElementById('input_aeti').value = 0.35;
         document.getElementById('input_pcp').value = 0.0;
+        showToast("Severe Drought scenario applied!", "🚨");
       } else if (type === 'heatwave') {
         document.getElementById('input_sm').value = 21.0;
         document.getElementById('input_temp').value = 34.0;
         document.getElementById('input_aeti').value = 0.75;
         document.getElementById('input_pcp').value = 0.05;
+        showToast("Heatwave Deficit scenario applied!", "⚠️");
       } else if (type === 'optimal') {
         document.getElementById('input_sm').value = 42.0;
         document.getElementById('input_temp').value = 27.0;
         document.getElementById('input_aeti').value = 1.15;
         document.getElementById('input_pcp').value = 2.50;
+        showToast("Post-Rain Optimal scenario applied!", "💧");
       }
       runLiveInference();
     }
@@ -722,14 +873,16 @@
       const temp = parseFloat(document.getElementById('input_temp').value);
       const aeti = parseFloat(document.getElementById('input_aeti').value);
       const pcp = parseFloat(document.getElementById('input_pcp').value);
-      const crit_sm = 35.0;
+      
+      const select = document.getElementById('simCropSelect');
+      const crit_sm = parseFloat(select.options[select.selectedIndex].getAttribute('data-crit') || 35.0);
 
       document.getElementById('label_sm').innerText = sm.toFixed(1) + '%';
       document.getElementById('label_temp').innerText = temp.toFixed(1) + '°C';
       document.getElementById('label_aeti').innerText = aeti.toFixed(2) + ' mm';
       document.getElementById('label_pcp').innerText = pcp.toFixed(2) + ' mm';
 
-      // Live Decision Tree Inference Formula (Fitted to FAO WaPOR 5,040 observations)
+      // Live Decision Tree Inference
       const deficit = Math.max(0, 1.0 - (sm / crit_sm));
       const tempPenalty = Math.max(0, (temp - 30.0) * 1.5);
       const etPenalty = Math.max(0, (aeti - pcp) * 3.8);
@@ -742,42 +895,52 @@
       const prioEl = document.getElementById('simPriority');
       const actEl = document.getElementById('simAction');
       const boxEl = document.getElementById('simOutputBox');
+      const emojiEl = document.getElementById('simPlantEmoji');
+      const volEl = document.getElementById('simWaterVol');
 
       scoreEl.innerText = score.toFixed(1);
       barEl.style.width = score + '%';
 
       if (score < 25) {
+        emojiEl.innerText = "🌿";
         badgeEl.innerText = "LOW STRESS";
-        badgeEl.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-200 shadow-sm";
+        badgeEl.className = "px-3.5 py-1 rounded-full text-xs font-black bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-200 shadow-xs";
         scoreEl.className = "text-6xl font-black font-mono text-emerald-600 dark:text-emerald-400";
-        barEl.className = "h-full bg-emerald-500 transition-all duration-300";
-        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border border-emerald-300 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-sm flex flex-col justify-between space-y-4 transition-all duration-300";
+        barEl.className = "h-full bg-emerald-500 rounded-full transition-all duration-300";
+        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border-2 border-emerald-300 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-300";
         prioEl.innerText = "Priority: Low (Adequate Moisture)";
         actEl.innerText = "Optimal root-zone moisture maintained. Defer irrigation cycle until next satellite dekad.";
+        volEl.innerText = "0 mm (Defer Irrigation)";
       } else if (score < 50) {
+        emojiEl.innerText = "🌾";
         badgeEl.innerText = "MEDIUM STRESS";
-        badgeEl.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-200 shadow-sm";
+        badgeEl.className = "px-3.5 py-1 rounded-full text-xs font-black bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-200 shadow-xs";
         scoreEl.className = "text-6xl font-black font-mono text-amber-600 dark:text-amber-400";
-        barEl.className = "h-full bg-amber-500 transition-all duration-300";
-        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border border-amber-300 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm flex flex-col justify-between space-y-4 transition-all duration-300";
+        barEl.className = "h-full bg-amber-500 rounded-full transition-all duration-300";
+        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border-2 border-amber-300 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-300";
         prioEl.innerText = "Priority: Moderate (Monitor 3-5 days)";
         actEl.innerText = "Soil moisture depletion detected. Plan a light top-up irrigation within 3 to 5 days.";
+        volEl.innerText = "~20 mm (2.0 lakh L/ha)";
       } else if (score < 75) {
+        emojiEl.innerText = "🍂";
         badgeEl.innerText = "HIGH STRESS";
-        badgeEl.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-orange-200 text-orange-950 dark:bg-orange-900 dark:text-orange-200 shadow-sm";
+        badgeEl.className = "px-3.5 py-1 rounded-full text-xs font-black bg-orange-200 text-orange-950 dark:bg-orange-900 dark:text-orange-200 shadow-xs";
         scoreEl.className = "text-6xl font-black font-mono text-orange-600 dark:text-orange-400";
-        barEl.className = "h-full bg-orange-500 transition-all duration-300";
-        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border border-orange-300 dark:border-orange-900/60 bg-orange-50/50 dark:bg-orange-950/20 shadow-sm flex flex-col justify-between space-y-4 transition-all duration-300";
+        barEl.className = "h-full bg-orange-500 rounded-full transition-all duration-300";
+        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border-2 border-orange-300 dark:border-orange-900/60 bg-orange-50/50 dark:bg-orange-950/20 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-300";
         prioEl.innerText = "Priority: High (Within 48 Hours)";
         actEl.innerText = "Schedule full irrigation cycle immediately; crop approaching permanent wilting point.";
+        volEl.innerText = "~35 mm (3.5 lakh L/ha)";
       } else {
+        emojiEl.innerText = "🥀";
         badgeEl.innerText = "CRITICAL EMERGENCY";
-        badgeEl.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-red-200 text-red-950 dark:bg-red-900 dark:text-red-200 shadow-sm";
+        badgeEl.className = "px-3.5 py-1 rounded-full text-xs font-black bg-red-200 text-red-950 dark:bg-red-900 dark:text-red-200 shadow-xs";
         scoreEl.className = "text-6xl font-black font-mono text-red-600 dark:text-red-400";
-        barEl.className = "h-full bg-red-500 transition-all duration-300";
-        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border border-red-300 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/20 shadow-sm flex flex-col justify-between space-y-4 transition-all duration-300";
+        barEl.className = "h-full bg-red-500 rounded-full transition-all duration-300";
+        boxEl.className = "lg:col-span-5 p-6 rounded-3xl border-2 border-red-300 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/20 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-300";
         prioEl.innerText = "Priority: Critical (Emergency Today)";
         actEl.innerText = "Trigger emergency irrigation today to prevent permanent crop wilting and irreversible yield loss!";
+        volEl.innerText = "~50 mm (5.0 lakh L/ha)";
       }
     }
 
@@ -842,6 +1005,7 @@
 
       renderAuditLogs();
       btnText.innerText = "Saved to Database!";
+      showToast(`Record ${newId} logged to database!`, "💾");
       setTimeout(() => { btnText.innerText = "Save Diagnosis to SQL Database"; }, 2000);
       switchTab('tab-audit');
     }
@@ -865,6 +1029,7 @@
             }));
             renderAuditLogs();
             document.getElementById('auditDbBadge').innerText = `Backend: ${data.database_backend || 'SQL'}`;
+            showToast("Database audit trail synchronized!", "🔄");
             return;
           }
         }
@@ -881,15 +1046,15 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/50 transition";
         tr.innerHTML = `
-          <td class="p-2.5 font-bold text-emerald-600 dark:text-emerald-400">${log.id}</td>
-          <td class="p-2.5">${log.field}</td>
-          <td class="p-2.5">${log.crop}</td>
-          <td class="p-2.5">${log.sm}%</td>
-          <td class="p-2.5">${log.temp}°C</td>
-          <td class="p-2.5 font-bold">${log.score}</td>
-          <td class="p-2.5"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800">${log.cat}</span></td>
-          <td class="p-2.5">${log.prio}</td>
-          <td class="p-2.5 text-slate-400">${log.time}</td>
+          <td class="p-3 font-bold text-emerald-600 dark:text-emerald-400 font-mono">${log.id}</td>
+          <td class="p-3 font-semibold">${log.field}</td>
+          <td class="p-3 font-semibold">${log.crop}</td>
+          <td class="p-3">${log.sm}%</td>
+          <td class="p-3">${log.temp}°C</td>
+          <td class="p-3 font-bold">${log.score}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 dark:bg-slate-800">${log.cat}</span></td>
+          <td class="p-3 font-medium">${log.prio}</td>
+          <td class="p-3 text-slate-400">${log.time}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -907,21 +1072,23 @@
       const prio = document.getElementById('simPriority').innerText;
       const act = document.getElementById('simAction').innerText;
       const crop = document.getElementById('simCropSelect').value;
+      const vol = document.getElementById('simWaterVol').innerText;
 
       document.getElementById('slipModalSm').innerText = sm + '%';
       document.getElementById('slipModalPlot').innerText = `CUSTOM_PLOT (${crop})`;
       document.getElementById('slipModalPriority').innerText = prio.replace('Priority: ', '');
       document.getElementById('slipModalDetail').innerText = act;
+      document.getElementById('slipModalWater').innerText = vol;
 
       const box = document.getElementById('slipModalBox');
       if (score < 25) {
-        box.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-center space-y-1";
+        box.className = "p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-center space-y-1";
       } else if (score < 50) {
-        box.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-center space-y-1";
+        box.className = "p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 text-center space-y-1";
       } else if (score < 75) {
-        box.className = "p-3.5 rounded-2xl bg-orange-50 border border-orange-300 text-center space-y-1";
+        box.className = "p-3.5 rounded-2xl bg-orange-50 border-2 border-orange-300 text-center space-y-1";
       } else {
-        box.className = "p-3.5 rounded-2xl bg-red-50 border border-red-300 text-center space-y-1";
+        box.className = "p-3.5 rounded-2xl bg-red-50 border-2 border-red-300 text-center space-y-1";
       }
 
       toggleSlipModal(true);
